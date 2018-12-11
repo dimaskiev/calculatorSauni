@@ -1,6 +1,6 @@
 <template>
   <div class="calculator">
-     <b-form @submit="onSubmit" @reset="onReset" v-if="show">
+     <b-form @submit="onSubmit" @reset="onReset" v-if="show" class="form">
       <div class="header__form">
         <h1 class="main__header">Сделайте рассчет индивидуальной сауны</h1>
       </div>
@@ -29,24 +29,33 @@
           <b-form-group id="size"
                     label="Размеры"
                     label-for="size">
-            <b-form-input id="width" class="inputsize"
+            <div class="size">
+              <b-form-input id="width" class="inputsize"
                       type="number"
                       v-model="form.width"
                       required
                       placeholder="Ширина">
-            </b-form-input>
-            <b-form-input id="height" class="inputsize"
-                      type="number"
-                      v-model="form.height"
-                      required
-                      placeholder="Высота">
-            </b-form-input>
+              </b-form-input>
+              <span>Ширина, см</span>
+            </div>
+            <div class="size">
             <b-form-input id="long" class="inputsize"
                       type="number"
                       v-model="form.long"
                       required
                       placeholder="Длина">
             </b-form-input>
+            <span>Длина, см</span>
+            </div>
+            <div class="size">
+              <b-form-input id="height" class="inputsize"
+                      type="number"
+                      v-model="form.height"
+                      required
+                      placeholder="Высота">
+            </b-form-input>
+            <span>Высота, см</span>
+            </div>
           </b-form-group>
         </div>
         <div class="column__form">
@@ -55,10 +64,10 @@
                     label-for="people">
             <span>{{form.people}}</span>
             <span> человек</span>
-            <b-form-input id="people" class="inputsize"
+            <b-form-input id="people" class="range__input"
                       type="range"
                       v-model="form.people"
-                      min="0" max="5">
+                      min="0" max="12">
             </b-form-input>
           </b-form-group>
           <b-form-group>
@@ -67,10 +76,10 @@
                       label-for="lights">
               <span>{{form.lights}}</span>
               <span> светильников</span>
-              <b-form-input id="lights" class="inputsize"
+              <b-form-input id="lights" class="range__input"
                         type="range"
                         v-model="form.lights"
-                        min="0" max="5">
+                        min="0" max="8">
               </b-form-input>
             </b-form-group>
           </b-form-group>
@@ -83,61 +92,29 @@
              <p class="info">Вместимость: {{this.form.people}} человек</p>
               <p class="info">Освещение: {{this.form.lights}} светильников</p>
         </div>
-        <div class="column__form">
-                    <b-form-group id="size"
-                    label="Размеры"
-                    label-for="size">
-            <b-form-input id="width" class="inputsize"
+        <div class="column__form column__contact">
+                    <b-form-group id="contact">
+                      <b-form-input id="name" class="input-contact"
+                        type="text"
+                        v-model="form.name"
+                        required
+                        placeholder="Имя">
+                      </b-form-input>
+                    <b-form-input id="tel" class="input-contact"
                       type="text"
-                      v-model="form.width"
+                      v-model="form.tel"
                       required
-                      placeholder="Ширина">
-            </b-form-input>
-            <b-form-input id="height" class="inputsize"
-                      type="text"
-                      v-model="form.height"
-                      required
-                      placeholder="Высота">
-            </b-form-input>
+                      placeholder="Телефон">
+                    </b-form-input>
           </b-form-group>
 
         <b-button type="submit" variant="primary">Submit</b-button>
         </div>
       </div>
-
-<!--             <b-form-group id="exampleInputGroup1"
-                    label="Email address:"
-                    label-for="exampleInput1"
-                    description="We'll never share your email with anyone else.">
-        <b-form-input id="exampleInput1"
-                      type="email"
-                      v-model="form.email"
-                      required
-                      placeholder="Enter email">
-        </b-form-input>
-      </b-form-group>
-      <b-form-group id="exampleInputGroup2"
-                    label="Your Name:"
-                    label-for="exampleInput2">
-        <b-form-input id="exampleInput2"
-                      type="text"
-                      v-model="form.name"
-                      required
-                      placeholder="Enter name">
-        </b-form-input>
-      </b-form-group>
-      <b-form-group id="exampleGroup4">
-        <b-form-checkbox-group v-model="form.checked" id="exampleChecks">
-          <b-form-checkbox value="me">Check me out</b-form-checkbox>
-          <b-form-checkbox value="that">Check that out</b-form-checkbox>
-        </b-form-checkbox-group>
-      </b-form-group>
-      <b-button type="submit" variant="primary">Submit</b-button>
-      <b-button type="reset" variant="danger">Reset</b-button> -->
     </b-form>
+    <div>{{result}}</div>
   </div>
 </template>
-
 <script>
 export default {
   name: 'Calculator',
@@ -152,16 +129,17 @@ export default {
         people: 2,
         lights: 2,
         classSauni: 'Люкс',
-        interiorLining: 'Дуб',
+        interiorLining: 'Ольха',
+        priceSauni: [[3310, 5200, 6300, 7200], [3120, 5050, 6070, 7050], [2930, 4900, 5840, 6900]],
         checked: []
       },
       classSauni: [
         { text: 'Люкс', value: 'Люкс' },
-        'Эконом', 'Стандарт', 'Люкс', 'Премиум'
+        'Эконом', 'Стандарт', 'Премиум'
       ],
       interiorLining: [
-        { text: 'Дуб', value: 'Дуб' },
-        'Ольха', 'Сосна', 'Дуб'
+        { text: 'Ольха', value: 'Ольха' },
+        'Липа', 'Кедр'
       ],
       show: true
     }
@@ -182,11 +160,80 @@ export default {
       this.form.people = ''
       this.form.lights = ''
       this.form.classSauni = 'Люкс'
-      this.form.interiorLining = 'Дуб'
+      this.form.interiorLining = 'Ольха'
+      this.form.priceSauni = 0
       this.form.checked = []
       /* Trick to reset/clear native browser form validation state */
       this.show = false
       this.$nextTick(() => { this.show = true })
+    }
+  },
+  computed: {
+    result: function () {
+      let size = (this.form.width / 100 * this.form.long / 100).toFixed(2)
+      if (size >= 5 && size <= 8) {
+        switch (this.form.classSauni) {
+          case 'Эконом':
+            size *= this.form.priceSauni[0][0]
+            break
+          case 'Стандарт':
+            size *= this.form.priceSauni[0][1]
+            break
+          case 'Люкс':
+            size *= this.form.priceSauni[0][2]
+            break
+          case 'Премиум':
+            size *= this.form.priceSauni[0][3]
+            break
+        }
+      } else {
+        if (size >= 9 && size <= 12) {
+          switch (this.form.classSauni) {
+            case 'Эконом':
+              size *= this.form.priceSauni[1][0]
+              break
+            case 'Стандарт':
+              size *= this.form.priceSauni[1][1]
+              break
+            case 'Люкс':
+              size *= this.form.priceSauni[1][2]
+              break
+            case 'Премиум':
+              size *= this.form.priceSauni[1][3]
+              break
+          }
+        } else {
+          switch (this.form.classSauni) {
+            case 'Эконом':
+              size *= this.form.priceSauni[2][0]
+              break
+            case 'Стандарт':
+              size *= this.form.priceSauni[2][1]
+              break
+            case 'Люкс':
+              size *= this.form.priceSauni[2][2]
+              break
+            case 'Премиум':
+              size *= this.form.priceSauni[2][3]
+              break
+          }
+        }
+      }
+      switch (this.form.interiorLining) {
+        case 'Липа':
+          size *= 2.5
+          break
+        case 'Кедр':
+          size *= 4.2
+          break
+        case 'Ольха':
+          size *= 3
+          break
+      }
+
+      if (this.form.lights > 5) size += 1500
+      if (this.form.people > 3) size += 2000
+      return size
     }
   }
 }
@@ -200,8 +247,12 @@ export default {
     align-items: center;
     justify-content: center;
     width: 85%;
-    padding: 50px;
+    padding: 35px;
     background-image: radial-gradient(circle 531px at 59px 147px,rgb(88, 55, 255) 0%,rgb(11, 72, 175) 40.1%,rgb(78, 110, 157) 100%);
+  }
+
+  .form{
+    width: 100%;
   }
   .header__form{
     margin-bottom: 25px;
@@ -215,26 +266,34 @@ export default {
   .body__form{
     display:flex;
     flex-direction: row;
-    flex-basis: 1;
     justify-content: center;
     align-content: space-around;
+    margin-bottom: 25px;
   }
   .form__footer{
     display:flex;
     flex-direction: row;
     flex-basis: 50%;
     justify-content: space-between;
-
+    margin: 20px;
+    border-radius: 3px;
   }
   .column__form{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    align-content: center;
     margin-right: 25px;
+    flex-basis: 25%;
+  }
+
+  .column__form:first-child{
+    flex-basis: 30%;
   }
 
   .column__form:last-child{
     margin-right: 0px;
+    flex-basis: 35%;
   }
   .custom-select{
     background-image: url(data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTguMS4xLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDEyNS4zMDQgMTI1LjMwNCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMTI1LjMwNCAxMjUuMzA0OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgd2lkdGg9IjE2cHgiIGhlaWdodD0iMTZweCI+CjxnPgoJPGc+CgkJPHBvbHlnb24gcG9pbnRzPSI2Mi42NTIsMTAzLjg5NSAwLDIxLjQwOSAxMjUuMzA0LDIxLjQwOSAgICIgZmlsbD0iI2Q2ZDRkNiIvPgoJPC9nPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+Cjwvc3ZnPgo=);
@@ -245,10 +304,11 @@ export default {
   }
 
   .inputsize{
-    margin-bottom: 40px;
-  }
-  .inputsize:last-child{
-    margin-bottom: 0px;
+    /* margin-bottom: 30px;*/
+    max-width: 100px;
+    height: 50px;
+    text-align: center;
+    margin-right: 15px;
   }
 
   input::-webkit-outer-spin-button,
@@ -265,4 +325,30 @@ export default {
     border: none;
     box-shadow: none;
   }
+
+  .form__footer{
+    color: black;
+    background-color: #fff;
+    padding: 35px;
+  }
+
+   .form__footer .column__form:last-child{
+    flex-basis: 50%;
+  }
+
+  .info{
+    padding: 0;
+    margin: 0;
+  }
+
+  .size{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 25px;
+  }
+  .size:last-child{
+    margin-bottom: 0px;
+  }
+
 </style>
